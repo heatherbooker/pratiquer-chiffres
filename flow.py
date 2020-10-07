@@ -6,11 +6,13 @@ import base64
 API_URL = 'https://texttospeech.googleapis.com/v1/text:synthesize'
 
 def get_auth():
+    credentials_file = 'google-services-key.json'
     command = ['gcloud', 'auth', 'application-default', 'print-access-token']
     command_output = subprocess.run(
             command,
             capture_output=True,
-            text=True)
+            text=True,
+            env={'GOOGLE_APPLICATION_CREDENTIALS': credentials_file})
     return command_output.stdout.strip()
 
 def send_request(data, auth):

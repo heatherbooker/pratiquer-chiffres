@@ -1,10 +1,10 @@
 {
   "input":{
-    "text":"Android is a mobile operating system developed by Google, based on the Linux kernel and designed primarily for touchscreen mobile devices such as smartphones and tablets."
+    "text":"0"
   },
   "voice":{
-    "languageCode":"en-gb",
-    "name":"en-GB-Standard-A",
+    "languageCode":"fr-CA",
+    "name":"fr-CA-Standard-A",
     "ssmlGender":"FEMALE"
   },
   "audioConfig":{

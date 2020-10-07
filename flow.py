@@ -1,9 +1,17 @@
+import random
+import json
 import subprocess
 import sys
 import requests
 import base64
 
 API_URL = 'https://texttospeech.googleapis.com/v1/text:synthesize'
+
+def get_req_object():
+    random_number = random.randrange(100)
+    req_data = json.load(open('request.json'))
+    req_data['input']['text'] = str(random_number)
+    return json.dumps(req_data)
 
 def get_auth():
     credentials_file = 'google-services-key.json'
@@ -39,10 +47,11 @@ def write_file(bytes):
     outfile.close()
 
 def main():
-    req_data = open('request.json')
+    req_data = get_req_object()
     auth = get_auth()
     api_response = send_request(req_data, auth)
     audio = process_response(api_response)
     write_file(audio)
+    print("success!")
 
 main()

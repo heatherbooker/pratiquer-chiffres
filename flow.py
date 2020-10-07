@@ -20,12 +20,18 @@ def send_request(data, auth):
         'Authorization': f'Bearer {auth}',
         'Content-Type': 'application/json; charset=utf-8',
     }
-
     return requests.post(API_URL, headers=headers, data=data)
 
 def process_response(response):
-    encoded_audio = response.json()['audioContent']
-    return base64.b64decode(encoded_audio)
+    try:
+        encoded_audio = response.json()['audioContent']
+        return base64.b64decode(encoded_audio)
+    except KeyError:
+        print('oopies, got a key error while parsing response; we sent:')
+        print(response.request)
+        print('and the response was:')
+        print(response.json())
+        raise
 
 def write_file(bytes):
     outfile = open('result.mp3', 'wb')

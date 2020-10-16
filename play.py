@@ -84,6 +84,7 @@ def play_the_game(level):
     question = "écrivez le chiffre que vous avez entendu: "
     user_input = input(question)
     while not mark_correct(random_number, convert_int_or_quit(user_input)):
+        listen(filename)
         user_input = input(question)
 
 def main():

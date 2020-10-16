@@ -1,2 +1,5 @@
 # where the fetched pronunciation audio clips go
 audio
+
+# private API key
+google-services-key.json

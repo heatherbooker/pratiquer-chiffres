@@ -47,8 +47,8 @@ def write_file(random_number, bytes):
     filename = f'{dirname}/{random_number}.mp3'
     outfile = open(filename, 'wb')
     outfile.write(bytes)
-    print(f'wrote the audio to file {filename}!')
     outfile.close()
+    return filename
 
 def get_audio(random_number):
     req_data = get_req_object(random_number)
@@ -56,6 +56,10 @@ def get_audio(random_number):
     api_response = send_request(req_data, auth)
     audio = process_response(api_response)
     return audio
+
+def listen(filename):
+    command = ['cvlc', '--play-and-exit', filename]
+    subprocess.Popen(command, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
 def mark_correct(number, guess):
     if number == guess:
@@ -65,15 +69,22 @@ def mark_correct(number, guess):
         print('uh oh, pas la bonne réponse :( essayez à nouveau !')
         return False
 
+def convert_int_or_quit(user_input):
+    try:
+        return int(user_input.strip())
+    except ValueError:
+        print('on a fini !')
+        raise SystemExit
+
 def play_the_game():
     random_number = random.randrange(100)
     audio = get_audio(random_number)
-    write_file(random_number, audio)
-    question = "écrivez le chiffre que vous avez entendu:"
-    guessed_number = input(question)
-    while not mark_correct(random_number, int(guessed_number.strip())):
-        guessed_number = input(question)
-    print("on a fini !")
+    filename = write_file(random_number, audio)
+    listen(filename)
+    question = "écrivez le chiffre que vous avez entendu: "
+    user_input = input(question)
+    while not mark_correct(random_number, convert_int_or_quit(user_input)):
+        user_input = input(question)
 
 while True:
     play_the_game()

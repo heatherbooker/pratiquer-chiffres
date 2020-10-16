@@ -44,17 +44,36 @@ def process_response(response):
 def write_file(random_number, bytes):
     dirname = 'audio'
     pathlib.Path(dirname).mkdir(exist_ok=True)
-    outfile = open(f'{dirname}/{random_number}.mp3', 'wb')
+    filename = f'{dirname}/{random_number}.mp3'
+    outfile = open(filename, 'wb')
     outfile.write(bytes)
+    print(f'wrote the audio to file {filename}!')
     outfile.close()
 
-def main():
-    random_number = random.randrange(100)
+def get_audio(random_number):
     req_data = get_req_object(random_number)
     auth = get_auth()
     api_response = send_request(req_data, auth)
     audio = process_response(api_response)
-    write_file(random_number, audio)
-    print("success!")
+    return audio
 
-main()
+def mark_correct(number, guess):
+    if number == guess:
+        print('très bien !')
+        return True
+    else:
+        print('uh oh, pas la bonne réponse :( essayez à nouveau !')
+        return False
+
+def play_the_game():
+    random_number = random.randrange(100)
+    audio = get_audio(random_number)
+    write_file(random_number, audio)
+    question = "écrivez le chiffre que vous avez entendu:"
+    guessed_number = input(question)
+    while not mark_correct(random_number, int(guessed_number.strip())):
+        guessed_number = input(question)
+    print("on a fini !")
+
+while True:
+    play_the_game()

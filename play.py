@@ -2,11 +2,14 @@ import random
 import json
 import subprocess
 import sys
+import os
 import pathlib
 import requests
 import base64
 
 API_URL = 'https://texttospeech.googleapis.com/v1/text:synthesize'
+AUDIO_DIRECTORY = 'audio'
+AUDIO_EXTENSION = 'mp3'
 
 def get_req_object(random_number):
     req_data = json.load(open('request.json'))
@@ -41,14 +44,14 @@ def process_response(response):
         print(response.json())
         raise
 
+def get_filepath(number):
+    return f'{AUDIO_DIRECTORY}/{number}.{AUDIO_EXTENSION}'
+
 def write_file(random_number, bytes):
-    dirname = 'audio'
-    pathlib.Path(dirname).mkdir(exist_ok=True)
-    filename = f'{dirname}/{random_number}.mp3'
+    filename = get_filepath(random_number)
     outfile = open(filename, 'wb')
     outfile.write(bytes)
     outfile.close()
-    return filename
 
 def get_audio(random_number):
     req_data = get_req_object(random_number)
@@ -66,7 +69,7 @@ def mark_correct(number, guess):
         print('très bien !')
         return True
     else:
-        print('uh oh, pas la bonne réponse :( essayez à nouveau !')
+        print('houlà, pas la bonne réponse :( essayez à nouveau !')
         return False
 
 def convert_int_or_quit(user_input):
@@ -76,21 +79,43 @@ def convert_int_or_quit(user_input):
         print('on a fini !')
         raise SystemExit
 
-def play_the_game(level):
+def choose_level():
+    levels = {'p': 100, 'm': 2000, 'g': 11111, 'tg': 1000000000}
+    selected = input('choisir un niveau: (p)etit, (m)oyenne, (g)rand, (tg)très grand: ')
+    return levels[selected]
+
+def play_online(level):
     random_number = random.randrange(level)
     audio = get_audio(random_number)
-    filename = write_file(random_number, audio)
-    listen(filename)
+    write_file(random_number, audio)
+    play(random_number)
+
+def play_offline():
+    available_audio_files = os.listdir(AUDIO_DIRECTORY)
+    filename = random.choice(available_audio_files)
+    number = pathlib.Path(filename).stem
+    play(int(number))
+
+def play(number):
+    filepath = get_filepath(number)
     question = "écrivez le chiffre que vous avez entendu: "
+    listen(filepath)
     user_input = input(question)
-    while not mark_correct(random_number, convert_int_or_quit(user_input)):
-        listen(filename)
+    while not mark_correct(number, convert_int_or_quit(user_input)):
+        listen(filepath)
         user_input = input(question)
 
 def main():
-    levels = {'p': 100, 'm': 2000, 'g': 11111, 'tg': 1000000000}
-    selected_level = input('choisir un niveau: (p)etit, (m)oyenne, (g)rand, (tg)très grand: ')
-    while True:
-        play_the_game(levels[selected_level])
+    if len(sys.argv) > 1 and sys.argv[1] == '--offline':
+        print('jouer hors ligne')
+        while True:
+            play_offline()
+    else:
+        # Premake audio files directory for saving audio.
+        pathlib.Path(AUDIO_DIRECTORY).mkdir(exist_ok=True)
+        print('jouer en ligne')
+        level = choose_level()
+        while True:
+            play_online(level)
 
 main()

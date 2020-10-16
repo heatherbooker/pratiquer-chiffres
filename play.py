@@ -76,8 +76,8 @@ def convert_int_or_quit(user_input):
         print('on a fini !')
         raise SystemExit
 
-def play_the_game():
-    random_number = random.randrange(100)
+def play_the_game(level):
+    random_number = random.randrange(level)
     audio = get_audio(random_number)
     filename = write_file(random_number, audio)
     listen(filename)
@@ -86,5 +86,10 @@ def play_the_game():
     while not mark_correct(random_number, convert_int_or_quit(user_input)):
         user_input = input(question)
 
-while True:
-    play_the_game()
+def main():
+    levels = {'p': 100, 'm': 2000, 'g': 11111, 'tg': 1000000000}
+    selected_level = input('choisir un niveau: (p)etit, (m)oyenne, (g)rand, (tg)très grand: ')
+    while True:
+        play_the_game(levels[selected_level])
+
+main()

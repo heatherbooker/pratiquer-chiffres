@@ -19,3 +19,7 @@ python play.py
 :heart_eyes:
 
 Reference for Google API: https://cloud.google.com/text-to-speech/docs/voices?hl=en_US
+
+## TODO
+- change requests.json to get different voices
+- add ability to say "999 done" in the same line

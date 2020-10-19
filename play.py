@@ -10,14 +10,16 @@ import base64
 API_URL = 'https://texttospeech.googleapis.com/v1/text:synthesize'
 AUDIO_DIRECTORY = 'audio'
 AUDIO_EXTENSION = 'mp3'
+SCRIPT_DIR = pathlib.Path(__file__).parent
 
 def get_req_object(random_number):
-    req_data = json.load(open('request.json'))
+    request_filepath = SCRIPT_DIR / 'request.json'
+    req_data = json.load(open(request_filepath))
     req_data['input']['text'] = str(random_number)
     return json.dumps(req_data)
 
 def get_auth():
-    credentials_file = 'google-services-key.json'
+    credentials_file = SCRIPT_DIR / 'google-services-key.json'
     command = ['gcloud', 'auth', 'application-default', 'print-access-token']
     command_output = subprocess.run(
             command,
@@ -45,7 +47,7 @@ def process_response(response):
         raise
 
 def get_filepath(number):
-    return f'{AUDIO_DIRECTORY}/{number}.{AUDIO_EXTENSION}'
+    return SCRIPT_DIR / f'{AUDIO_DIRECTORY}/{number}.{AUDIO_EXTENSION}'
 
 def write_file(random_number, bytes):
     filename = get_filepath(random_number)

@@ -23,3 +23,4 @@ Reference for Google API: https://cloud.google.com/text-to-speech/docs/voices?hl
 ## TODO
 - change requests.json to get different voices
 - add ability to say "999 done" in the same line
+- catch KeyboardInterrupt to exit happily

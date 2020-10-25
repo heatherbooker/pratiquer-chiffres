@@ -14,9 +14,10 @@ SCRIPT_DIR = pathlib.Path(__file__).parent
 
 def get_req_object(random_number):
     request_filepath = SCRIPT_DIR / 'request.json'
-    req_data = json.load(open(request_filepath))
-    req_data['input']['text'] = str(random_number)
-    return json.dumps(req_data)
+    with open(request_filepath) as req_data:
+        request = json.load(req_data)
+        request['input']['text'] = str(random_number)
+    return json.dumps(request)
 
 def get_auth():
     credentials_file = SCRIPT_DIR / 'google-services-key.json'
@@ -51,9 +52,8 @@ def get_filepath(number):
 
 def write_file(random_number, bytes):
     filename = get_filepath(random_number)
-    outfile = open(filename, 'wb')
-    outfile.write(bytes)
-    outfile.close()
+    with open(filename, 'wb') as outfile:
+        outfile.write(bytes)
 
 def get_audio(random_number):
     req_data = get_req_object(random_number)

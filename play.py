@@ -87,7 +87,7 @@ def choose_level():
     return levels[selected]
 
 def play_online(level):
-    random_number = random.randrange(level)
+    random_number = random.randrange(0, level, 1 if level < 99999 else 100000)
     audio = get_audio(random_number)
     write_file(random_number, audio)
     play(random_number)

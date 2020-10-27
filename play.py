@@ -8,9 +8,9 @@ import requests
 import base64
 
 API_URL = 'https://texttospeech.googleapis.com/v1/text:synthesize'
-AUDIO_DIRECTORY = 'audio'
-AUDIO_EXTENSION = 'mp3'
 SCRIPT_DIR = pathlib.Path(__file__).parent
+AUDIO_DIRECTORY = SCRIPT_DIR / 'audio'
+AUDIO_EXTENSION = 'mp3'
 
 def get_req_object(random_number):
     request_filepath = SCRIPT_DIR / 'request.json'
@@ -48,7 +48,7 @@ def process_response(response):
         raise
 
 def get_filepath(number):
-    return SCRIPT_DIR / f'{AUDIO_DIRECTORY}/{number}.{AUDIO_EXTENSION}'
+    return f'{AUDIO_DIRECTORY}/{number}.{AUDIO_EXTENSION}'
 
 def write_file(random_number, bytes):
     filename = get_filepath(random_number)

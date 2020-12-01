@@ -121,3 +121,18 @@ def main():
             play_online(level)
 
 main()
+
+# Use this to prepare for basic offline play.
+def fetch_nums_under_100():
+    available_audio_files = os.listdir(AUDIO_DIRECTORY)
+    saved_numbers = []
+    for filename in available_audio_files:
+        number = pathlib.Path(filename).stem
+        saved_numbers.append(number)
+
+    for n in range(101):
+        if n in saved_numbers:
+            continue
+        else:
+            audio = get_audio(n)
+            write_file(n, audio)

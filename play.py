@@ -50,13 +50,13 @@ def process_response(response):
 def get_filepath(number):
     return f'{AUDIO_DIRECTORY}/{number}.{AUDIO_EXTENSION}'
 
-def write_file(random_number, bytes):
-    filename = get_filepath(random_number)
+def write_file(number, bytes):
+    filename = get_filepath(number)
     with open(filename, 'wb') as outfile:
         outfile.write(bytes)
 
-def get_audio(random_number):
-    req_data = get_req_object(random_number)
+def get_audio(number):
+    req_data = get_req_object(number)
     auth = get_auth()
     api_response = send_request(req_data, auth)
     audio = process_response(api_response)
